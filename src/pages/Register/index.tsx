@@ -6,8 +6,13 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import SignupForm from "./components/Form";
+import type { RegisterPayload } from "./schemas/register";
 
 export default function RegisterPage() {
+  const onSubmit = (values: RegisterPayload) => {
+    console.log("Form submitted with values:", values);
+    // Here you would typically handle the registration logic, such as calling an API
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <Card className="w-full max-w-md">
@@ -20,7 +25,7 @@ export default function RegisterPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SignupForm />
+          <SignupForm onSubmitForm={onSubmit} />
         </CardContent>
       </Card>
     </div>
