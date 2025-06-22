@@ -1,11 +1,15 @@
 import "./App.css";
+import { Routes, Route } from "react-router";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
     <>
-      <div>
-        <h1 className="text-2xl font-bold text-center my-4">Hello World</h1>
-      </div>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
     </>
   );
 }
