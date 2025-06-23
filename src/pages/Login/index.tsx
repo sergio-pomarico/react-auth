@@ -5,14 +5,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
+import { useMutation } from "@tanstack/react-query";
 import LoginForm from "./components/Form";
 import type { LoginPayload } from "./schemas/login";
+import authServices from "@/services/auth";
+import { LoadingOverlay } from "@/shared/components/ui/loader";
 
 export default function LoginPage() {
-  const onSubmit = (values: LoginPayload) => {
-    console.log("Form submitted with values:", values);
-    // Here you would typically handle the login logic, such as calling an API
-  };
+  const { mutate, isPending: isLoading } = useMutation({
+    mutationFn: async (values: LoginPayload) =>
+      await authServices.login(values),
+    onError: (error, variables, context) => {
+      console.error("Login failed with error:", error, variables, context);
+    },
+    onSuccess: (data, variables, context) => {
+      console.log("Login successful with data:", data, variables, context);
+    },
+  });
+  const onSubmit = (values: LoginPayload) => mutate(values);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <Card className="w-full max-w-md">
@@ -28,6 +39,7 @@ export default function LoginPage() {
           <LoginForm onSubmitForm={onSubmit} />
         </CardContent>
       </Card>
+      <LoadingOverlay isVisible={isLoading} />
     </div>
   );
 }

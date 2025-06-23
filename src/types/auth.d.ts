@@ -4,6 +4,6 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-  refreshToken: string;
+  refreshToken?: string;
   accessToken: string;
 }
