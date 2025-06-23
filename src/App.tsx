@@ -1,11 +1,13 @@
 import "./App.css";
 import { Routes, Route } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/shared/components/sonner";
+import { Toaster } from "@/shared/components/ui/sonner";
+import { ProtectedRoute } from "./shared/components/protected";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DashboardPage from "./pages/Dashboard";
-import { DashboardLayout } from "./shared/components/protected";
+import VerifyMFAPage from "./pages/Mfa/Verify";
+import SetupMfaPage from "./pages/Mfa/Setup";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +18,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
-          element={<DashboardLayout />}
+          element={<ProtectedRoute />}
+          children={[
+            <Route path="/mfa-setup" element={<SetupMfaPage />} />,
+            <Route path="/mfa-verify" element={<VerifyMFAPage />} />,
+          ]}
+        />
+        <Route
+          element={<ProtectedRoute />}
           children={[<Route path="/" element={<DashboardPage />} />]}
         />
       </Routes>

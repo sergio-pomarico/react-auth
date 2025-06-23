@@ -1,7 +1,7 @@
-import { Input } from "@/shared/components/input";
-import { Label } from "@/shared/components/label";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
 import { Eye, EyeOff, LogIn } from "lucide-react";
-import { Button } from "@/shared/components/button";
+import { Button } from "@/shared/components/ui/button";
 
 import { loginSchema, type LoginPayload } from "@/pages/Login/schemas/login";
 import { useState } from "react";

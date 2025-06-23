@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/shared/components/card";
+} from "@/shared/components/ui/card";
 import SignupForm from "./components/Form";
 import type { RegisterPayload } from "./schemas/register";
 

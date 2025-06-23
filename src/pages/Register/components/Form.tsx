@@ -1,9 +1,9 @@
-import { Input } from "@/shared/components/input";
-import { Label } from "@/shared/components/label";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
 import { Eye, EyeOff, UserPlus } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
-import { Button } from "@/shared/components/button";
+import { Button } from "@/shared/components/ui/button";
 import PasswordStrengthMeter from "./PasswordStrength";
 import { registerSchema, type RegisterPayload } from "../schemas/register";
 import { type ZodIssue } from "zod";
