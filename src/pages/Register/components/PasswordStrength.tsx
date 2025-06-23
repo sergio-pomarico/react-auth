@@ -1,4 +1,4 @@
-import { Progress } from "@/shared/components/ui/progress";
+import { Progress } from "@/shared/components/progress";
 import { usePasswordStrength } from "../hooks/use-password-strength";
 
 const labels = {
