@@ -4,6 +4,19 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-  refreshToken?: string;
-  accessToken: string;
+  credentials: {
+    mfaEnabled: boolean;
+    refreshToken?: string;
+    accessToken: string;
+  };
+}
+
+interface ErrorResponse {
+  statusCode: string;
+  status?: string;
+  error: {
+    message: string;
+    code: string;
+    description: string;
+  };
 }

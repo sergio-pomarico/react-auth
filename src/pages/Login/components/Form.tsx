@@ -1,7 +1,7 @@
-import { Input } from "@/shared/components/ui/input";
-import { Label } from "@/shared/components/ui/label";
+import { Input } from "@/shared/components/input";
+import { Label } from "@/shared/components/label";
 import { Eye, EyeOff, LogIn } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/shared/components/button";
 
 import { loginSchema, type LoginPayload } from "@/pages/Login/schemas/login";
 import { useState } from "react";
@@ -9,8 +9,8 @@ import { useForm } from "@tanstack/react-form";
 
 export interface LoginFormProps {
   onSubmitForm: (values: LoginPayload) => void;
-  onClickForgotPassword?: () => void;
-  onClickRegister?: () => void;
+  onForgotPassword?: () => void;
+  onRegister?: () => void;
 }
 
 function FieldError({ error }: { error?: string }) {
@@ -18,7 +18,11 @@ function FieldError({ error }: { error?: string }) {
   return <p className="text-sm text-red-500 mt-1">{error}</p>;
 }
 
-export default function LoginForm({ onSubmitForm }: LoginFormProps) {
+export default function LoginForm({
+  onSubmitForm,
+  onForgotPassword,
+  onRegister,
+}: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm({
     defaultValues: {
@@ -46,7 +50,7 @@ export default function LoginForm({ onSubmitForm }: LoginFormProps) {
           onChange: loginSchema.shape.email,
         }}
         children={(field) => (
-          <div className="space-y-2">
+          <div className="space-y-4 mb-8">
             <Label htmlFor="login-email">Email</Label>
             <Input
               id="login-email"
@@ -66,8 +70,17 @@ export default function LoginForm({ onSubmitForm }: LoginFormProps) {
           onChange: loginSchema.shape.password,
         }}
         children={(field) => (
-          <div className="space-y-2">
-            <Label htmlFor="login-password">Password</Label>
+          <div className="space-y-2 mb-8">
+            <div className="flex items-center">
+              <Label htmlFor="login-password">Password</Label>
+              <button
+                type="button"
+                onClick={onForgotPassword}
+                className="ml-auto text-sm underline-offset-4 hover:underline"
+              >
+                Forgot your password?
+              </button>
+            </div>
             <div className="relative">
               <Input
                 id="login-password"
@@ -95,16 +108,15 @@ export default function LoginForm({ onSubmitForm }: LoginFormProps) {
           Log In
         </>
       </Button>
-      <div className="text-center">
+      <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t"></div>
+      <div className="text-center text-sm">
+        Don&apos;t have an account?{" "}
         <button
           type="button"
-          onClick={() => {
-            // Aquí iría la lógica para recuperar contraseña
-            alert("Funcionalidad de recuperación de contraseña - próximamente");
-          }}
-          className="text-sm text-gray-600 hover:text-gray-800 hover:underline focus:outline-none focus:underline"
+          onClick={onRegister}
+          className="underline underline-offset-4"
         >
-          ¿Olvidaste tu contraseña?
+          Sign up
         </button>
       </div>
     </form>
