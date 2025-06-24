@@ -11,6 +11,12 @@ export interface LoginResponse {
   };
 }
 
+export interface MfaSetupResponse {
+  status: string;
+  message: string;
+  qr: string;
+}
+
 interface ErrorResponse {
   statusCode: string;
   status?: string;

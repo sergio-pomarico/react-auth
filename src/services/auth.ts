@@ -1,7 +1,11 @@
 import type { AxiosRequestConfig } from "axios";
 import { HTTPClient } from "../shared/axios/axios";
 import { buidConfig } from "../shared/axios/config";
-import type { LoginPayload, LoginResponse } from "@/types/auth";
+import type {
+  LoginPayload,
+  LoginResponse,
+  MfaSetupResponse,
+} from "@/types/auth";
 
 const API_URL = "http://localhost:3000";
 
@@ -17,6 +21,10 @@ class AuthService extends HTTPClient {
       "/auth/login",
       payload
     );
+    return result.data;
+  };
+  setupMfa = async (): Promise<MfaSetupResponse> => {
+    const result = await this.post<MfaSetupResponse, unknown>("/mfa/setup", {});
     return result.data;
   };
 }

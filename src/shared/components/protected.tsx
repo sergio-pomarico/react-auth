@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/store/auth";
 import { Navigate, Outlet } from "react-router";
 
-export const DashboardLayout = () => {
+export const ProtectedRoute = () => {
   const isAuth = useAuthStore((state) => state.isAuth);
   if (!isAuth) {
     return <Navigate to="/login" />;
@@ -10,4 +10,4 @@ export const DashboardLayout = () => {
   return <Outlet />;
 };
 
-export default DashboardLayout;
+export default ProtectedRoute;

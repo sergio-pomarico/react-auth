@@ -40,19 +40,16 @@ export class HTTPClient {
     this.config = config;
     this.instance = axios.create(this.config);
     this.interceptors = this.instance.interceptors;
-    this.injectToken();
   }
 
   /**
    * Add Authorization header to request when token in setter.
    * @return void
    */
-  injectToken() {
+  setAuthorizationHeader(token: string): void {
     this.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        if (this.token !== undefined) {
-          config!.headers!.Authorization = this.token;
-        }
+        config.headers["Authorization"] = token;
         return config;
       },
       (error: AxiosError) => {

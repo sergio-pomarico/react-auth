@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/shared/components/card";
+} from "@/shared/components/ui/card";
 import type { LoginPayload } from "./schemas/login";
 
 import { useMutation } from "@tanstack/react-query";
@@ -22,9 +22,13 @@ export default function LoginPage() {
       await authServices.login(values),
     onError: (error) => ToastError(error),
     onSuccess: (data) => {
-      const { credentials } = data;
-      login(credentials.accessToken);
-      navigate("/");
+      const {
+        credentials: { accessToken, mfaEnabled },
+      } = data;
+      login(accessToken);
+      authServices.setAuthorizationHeader(accessToken);
+      const route = mfaEnabled ? "/mfa-verify" : "/mfa-setup";
+      navigate(route);
     },
   });
   const login = useAuthStore((state) => state.login);
