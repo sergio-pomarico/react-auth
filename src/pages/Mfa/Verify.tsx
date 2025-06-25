@@ -5,10 +5,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
-import { LoadingOverlay } from "@/shared/components/loader";
 import MFAVerifyForm from "./components/FormVerify";
+import ToastError from "@/shared/components/toast-error";
+import { LoadingOverlay } from "@/shared/components/loader";
+import { useMutation } from "@tanstack/react-query";
+import authServices from "@/services/auth";
+import { useNavigate } from "react-router";
+import { useAuthStore } from "@/store/auth";
 
 export default function VerifyMFAPage() {
+  const { mutate, isPending: isLoading } = useMutation({
+    mutationFn: async (token: string) => await authServices.mfaVerify(token),
+    onError: (error) => ToastError(error),
+    onSuccess: (data) => {
+      const {
+        credentials: { accessToken },
+      } = data;
+      login(accessToken);
+      navigate("/");
+    },
+  });
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
+  const onSubmit = (token: string) => {
+    mutate(token);
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <Card className="w-full max-w-md">
@@ -21,10 +42,10 @@ export default function VerifyMFAPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <MFAVerifyForm onSubmitForm={() => {}} />
+          <MFAVerifyForm onSubmitForm={onSubmit} />
         </CardContent>
       </Card>
-      <LoadingOverlay isVisible={false} />
+      <LoadingOverlay isVisible={isLoading} />
     </div>
   );
 }

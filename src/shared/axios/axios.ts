@@ -1,5 +1,4 @@
 import axios, {
-  AxiosError,
   type AxiosInstance,
   type AxiosInterceptorManager,
   type AxiosRequestConfig,
@@ -7,15 +6,21 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 
+type AuthStorage = {
+  state: {
+    isAuth: boolean;
+    token: string;
+  };
+};
+
 /**
  * @class HTTP Class is a es6 wrapper class for axios.
  * @param {import("axios").AxiosRequestConfig} config - axios Request Config.
  * @link [AxiosRequestConfig](https://github.com/axios/axios#request-config)
  */
 export class HTTPClient {
-  private instance: AxiosInstance;
-  private config: AxiosRequestConfig;
-  private _token: string | undefined;
+  private static instance: HTTPClient;
+  private axiosInstance: AxiosInstance;
 
   interceptors: {
     /**
@@ -37,41 +42,55 @@ export class HTTPClient {
    * @param {import("axios").AxiosRequestConfig} config
    */
   constructor(config: AxiosRequestConfig) {
-    this.config = config;
-    this.instance = axios.create(this.config);
-    this.interceptors = this.instance.interceptors;
+    this.axiosInstance = axios.create(config);
+    this.interceptors = this.axiosInstance.interceptors;
+    this.loadTokenFromLocalStorage();
   }
 
   /**
-   * Add Authorization header to request when token in setter.
+   * This method ensures that only one instance of HTTPClient is created.
+   * If an instance already exists, it returns that instance.
+   * @static
+   * @param {import("axios").AxiosRequestConfig} config
+   * @return {HTTPClient} - The singleton instance of HTTPClient.
+   */
+  public static getInstance(config: AxiosRequestConfig): HTTPClient {
+    if (!HTTPClient.instance) {
+      HTTPClient.instance = new HTTPClient(config);
+    }
+    return HTTPClient.instance;
+  }
+
+  /**
+   * Load token from local storage.
+   */
+  private loadTokenFromLocalStorage(): void {
+    const storage = localStorage.getItem("authentication");
+    if (storage) {
+      const {
+        state: { token = "" },
+      } = JSON.parse(storage) as AuthStorage;
+      if (token) {
+        this.setAuthorizationToken(token);
+      }
+    }
+  }
+
+  /**
+   * Set Authorization header to request.
+   * @param {string} token - token.
    * @return void
    */
-  setAuthorizationHeader(token: string): void {
-    this.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
-        config.headers["Authorization"] = token;
-        return config;
-      },
-      (error: AxiosError) => {
-        return Promise.reject(error);
-      }
-    );
+  public setAuthorizationToken(token: string): void {
+    this.axiosInstance.defaults.headers.common["Authorization"] = token;
   }
 
   /**
-   * Sets Token.
-   * @param {string} token - token.
+   * Clear Authorization header from request.
+   * @return void
    */
-  set setToken(token: string) {
-    this._token = token;
-  }
-
-  /**
-   * Gets Token.
-   * @returns {string} token.
-   */
-  get token(): string | undefined {
-    return this._token;
+  public clearAuthorizationToken(): void {
+    delete this.axiosInstance.defaults.headers.common["Authorization"];
   }
 
   /**
@@ -84,7 +103,7 @@ export class HTTPClient {
   request<T = unknown, R = AxiosResponse<T>>(
     config: AxiosRequestConfig
   ): Promise<R> {
-    return this.instance.request(config);
+    return this.axiosInstance.request(config);
   }
 
   /**
@@ -99,7 +118,7 @@ export class HTTPClient {
     url: string,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    return this.instance.get<T, R>(url, config);
+    return this.axiosInstance.get<T, R>(url, config);
   }
 
   /**
@@ -117,7 +136,7 @@ export class HTTPClient {
     data: B,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    return this.instance.post<B, R>(url, data, config);
+    return this.axiosInstance.post<B, R>(url, data, config);
   }
 
   /**
@@ -135,7 +154,7 @@ export class HTTPClient {
     data: B,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    return this.instance.put<B, R>(url, data, config);
+    return this.axiosInstance.put<B, R>(url, data, config);
   }
 
   /**
@@ -150,6 +169,6 @@ export class HTTPClient {
     url: string,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    return this.instance.delete<T, R>(url, config);
+    return this.axiosInstance.delete<T, R>(url, config);
   }
 }

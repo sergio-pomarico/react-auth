@@ -11,20 +11,39 @@ const API_URL = "http://localhost:3000";
 
 const _config = buidConfig(API_URL);
 
-class AuthService extends HTTPClient {
+class AuthService {
+  http: HTTPClient;
   constructor(config: AxiosRequestConfig) {
-    super(config);
+    this.http = HTTPClient.getInstance(config);
   }
 
   login = async (payload: LoginPayload): Promise<LoginResponse> => {
-    const result = await this.post<LoginResponse, LoginPayload>(
+    const result = await this.http.post<LoginResponse, LoginPayload>(
       "/auth/login",
       payload
     );
+    const {
+      credentials: { accessToken },
+    } = result.data;
+    this.http.setAuthorizationToken(accessToken);
     return result.data;
   };
   setupMfa = async (): Promise<MfaSetupResponse> => {
-    const result = await this.post<MfaSetupResponse, unknown>("/mfa/setup", {});
+    const result = await this.http.post<MfaSetupResponse, unknown>(
+      "/mfa/setup",
+      {}
+    );
+    return result.data;
+  };
+  mfaVerify = async (token: string): Promise<LoginResponse> => {
+    const result = await this.http.post<LoginResponse, { token: string }>(
+      "/mfa/verify",
+      { token }
+    );
+    const {
+      credentials: { accessToken },
+    } = result.data;
+    this.http.setAuthorizationToken(accessToken);
     return result.data;
   };
 }

@@ -26,7 +26,6 @@ export default function LoginPage() {
         credentials: { accessToken, mfaEnabled },
       } = data;
       login(accessToken);
-      authServices.setAuthorizationHeader(accessToken);
       const route = mfaEnabled ? "/mfa-verify" : "/mfa-setup";
       navigate(route);
     },
