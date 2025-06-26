@@ -5,10 +5,11 @@ import {
   InputOTPSlot,
 } from "@/shared/components/ui/input-otp";
 import { useForm } from "@tanstack/react-form";
-import { LogIn } from "lucide-react";
+import { LogIn, TimerResetIcon } from "lucide-react";
 
 export interface MFAVerifyFormProps {
   onSubmitForm: (token: string) => void;
+  onPressResetMFA: () => void;
 }
 
 function FieldError({ error }: { error?: string }) {
@@ -16,7 +17,10 @@ function FieldError({ error }: { error?: string }) {
   return <p className="text-sm text-red-500 mt-1">{error}</p>;
 }
 
-export default function MFAVerifyForm({ onSubmitForm }: MFAVerifyFormProps) {
+export default function MFAVerifyForm({
+  onSubmitForm,
+  onPressResetMFA,
+}: MFAVerifyFormProps) {
   const form = useForm({
     defaultValues: {
       token: "",
@@ -70,12 +74,27 @@ export default function MFAVerifyForm({ onSubmitForm }: MFAVerifyFormProps) {
           </div>
         )}
       />
-      <Button type="submit" className="w-full" disabled={!form.state.isValid}>
-        <>
-          <LogIn size={16} className="mr-2" />
-          Verify code
-        </>
-      </Button>
+      <div className="space-y-2 mb-4">
+        <Button type="submit" className="w-full" disabled={!form.state.isValid}>
+          <>
+            <LogIn size={16} className="mr-2" />
+            Verify code
+          </>
+        </Button>
+      </div>
+      <div className="space-y-2 mb-8">
+        <Button
+          type="button"
+          className="w-full"
+          onClick={onPressResetMFA}
+          variant="outline"
+        >
+          <>
+            <TimerResetIcon size={16} className="mr-2" />
+            Reset MFA
+          </>
+        </Button>
+      </div>
     </form>
   );
 }

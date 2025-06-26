@@ -15,6 +15,7 @@ export interface MfaSetupResponse {
   status: string;
   message: string;
   qr: string;
+  secret: string;
 }
 
 interface ErrorResponse {

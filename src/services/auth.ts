@@ -46,6 +46,13 @@ class AuthService {
     this.http.setAuthorizationToken(accessToken);
     return result.data;
   };
+  resetMfa = async (): Promise<{ status: string; message: string }> => {
+    const result = await this.http.post<
+      { status: string; message: string },
+      unknown
+    >("/mfa/reset", {});
+    return result.data;
+  };
 }
 
 const authServices = new AuthService(_config);

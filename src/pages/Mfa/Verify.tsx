@@ -25,10 +25,22 @@ export default function VerifyMFAPage() {
       navigate("/");
     },
   });
+
+  const { mutate: resetMutate } = useMutation({
+    mutationFn: async () => await authServices.resetMfa(),
+    onError: (error) => ToastError(error),
+    onSuccess: () => {
+      navigate("/mfa-setup");
+    },
+  });
+
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
   const onSubmit = (token: string) => {
     mutate(token);
+  };
+  const onResetMFA = () => {
+    resetMutate();
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
@@ -42,7 +54,7 @@ export default function VerifyMFAPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <MFAVerifyForm onSubmitForm={onSubmit} />
+          <MFAVerifyForm onSubmitForm={onSubmit} onPressResetMFA={onResetMFA} />
         </CardContent>
       </Card>
       <LoadingOverlay isVisible={isLoading} />
