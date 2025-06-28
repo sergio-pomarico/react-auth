@@ -4,8 +4,9 @@ import { Eye, EyeOff, LogIn } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 
 import { loginSchema, type LoginPayload } from "@/pages/Login/schemas/login";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
+import { Checkbox } from "@/shared/components/ui/checkbox";
 
 export interface LoginFormProps {
   onSubmitForm: (values: LoginPayload) => void;
@@ -24,15 +25,39 @@ export default function LoginForm({
   onRegister,
 }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const form = useForm({
     defaultValues: {
-      email: "",
+      email: localStorage.getItem("email") ?? "",
       password: "",
     },
     onSubmit: ({ value }) => {
       onSubmitForm(value);
     },
   });
+
+  // Load saved email on component mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("email");
+    const wasRemembered = localStorage.getItem("rememberMe") === "true";
+    if (savedEmail && wasRemembered) {
+      setRememberMe(true);
+    }
+  }, []);
+
+  const handleRememberMeChange = (checked: boolean) => {
+    setRememberMe(checked);
+
+    if (checked) {
+      if (form.state.values.email.trim()) {
+        localStorage.setItem("email", form.state.values.email.trim());
+      }
+      localStorage.setItem("rememberMe", "true");
+    } else {
+      localStorage.removeItem("rememberMe");
+      localStorage.removeItem("email");
+    }
+  };
 
   return (
     <form
@@ -101,7 +126,16 @@ export default function LoginForm({
           </div>
         )}
       />
-
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="remember"
+          checked={rememberMe}
+          onCheckedChange={handleRememberMeChange}
+        />
+        <Label htmlFor="remember" className="text-sm text-gray-600">
+          Remember me
+        </Label>
+      </div>
       <Button type="submit" className="w-full">
         <>
           <LogIn size={16} className="mr-2" />
