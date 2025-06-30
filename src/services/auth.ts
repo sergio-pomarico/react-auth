@@ -53,6 +53,13 @@ class AuthService {
     >("/mfa/reset", {});
     return result.data;
   };
+  getUserInfo = async (): Promise<unknown> => {
+    const result = await this.http.get<{ status: string; message: string }>(
+      "/auth/me",
+      {}
+    );
+    return result.data;
+  };
 }
 
 const authServices = new AuthService(_config);
