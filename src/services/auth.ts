@@ -60,6 +60,13 @@ class AuthService {
     );
     return result.data;
   };
+  refreshToken = async (): Promise<{ status: string; accessToken: string }> => {
+    const result = await this.http.post<
+      { status: string; accessToken: string },
+      unknown
+    >("/auth/refresh", {});
+    return result.data;
+  };
 }
 
 const authServices = new AuthService(_config);

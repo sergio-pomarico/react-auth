@@ -1,7 +1,12 @@
 import "./App.css";
 import { Routes, Route } from "react-router";
 import { ThemeProvider } from "@/shared/components/theme-provider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { Toaster } from "@/shared/components/ui/sonner";
 import { ProtectedRoute } from "./shared/components/protected";
 import Login from "./pages/Login";
@@ -9,10 +14,25 @@ import Register from "./pages/Register";
 import DashboardPage from "./pages/Dashboard";
 import VerifyMFAPage from "./pages/Mfa/Verify";
 import SetupMfaPage from "./pages/Mfa/Setup";
-
-const queryClient = new QueryClient();
+import { useAuthRefresh } from "./hooks/use-auth-refresh";
 
 function App() {
+  const { mutationErrorHandler, queryErrorHandler } = useAuthRefresh();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        retry: 0,
+      },
+    },
+    mutationCache: new MutationCache({
+      onError: mutationErrorHandler,
+    }),
+    queryCache: new QueryCache({
+      onError: queryErrorHandler,
+    }),
+  });
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="ui-theme">

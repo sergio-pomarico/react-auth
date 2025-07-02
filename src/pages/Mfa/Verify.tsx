@@ -22,6 +22,7 @@ export default function VerifyMFAPage() {
         credentials: { accessToken, refreshToken },
       } = data;
       login(accessToken, refreshToken);
+      authServices.http.setAuthorizationToken(accessToken, refreshToken);
       navigate("/");
     },
   });

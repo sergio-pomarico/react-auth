@@ -10,6 +10,7 @@ type AuthStorage = {
   state: {
     isAuth: boolean;
     token: string;
+    refresh: string;
   };
 };
 
@@ -68,10 +69,10 @@ export class HTTPClient {
     const storage = localStorage.getItem("authentication");
     if (storage) {
       const {
-        state: { token = "" },
+        state: { token = "", refresh = "" },
       } = JSON.parse(storage) as AuthStorage;
       if (token) {
-        this.setAuthorizationToken(token);
+        this.setAuthorizationToken(token, refresh);
       }
     }
   }
@@ -79,10 +80,15 @@ export class HTTPClient {
   /**
    * Set Authorization header to request.
    * @param {string} token - token.
+   * @param {string} refreshToken - token
    * @return void
    */
-  public setAuthorizationToken(token: string): void {
+  public setAuthorizationToken(token: string, refreshToken?: string): void {
     this.axiosInstance.defaults.headers.common["Authorization"] = token;
+    if (refreshToken) {
+      this.axiosInstance.defaults.headers.common["x-refresh-token"] =
+        refreshToken;
+    }
   }
 
   /**
