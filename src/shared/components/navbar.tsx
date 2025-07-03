@@ -16,7 +16,12 @@ import { Button } from "./ui/button";
 import { useTheme } from "@/shared/components/theme-provider";
 import { SidebarTrigger } from "./ui/sidebar";
 
-export default function Navbar() {
+interface NavbarProps {
+  onPressLogout: () => void;
+  user: User | undefined;
+}
+
+export default function Navbar({ onPressLogout, user }: NavbarProps) {
   const { setTheme } = useTheme();
   return (
     <nav className="p-4 items-center justify-between flex flex-row  h-16 shrink-0 gap-2 border-b">
@@ -50,7 +55,9 @@ export default function Navbar() {
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" sideOffset={10}>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              {user?.email ?? "My Account"}{" "}
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <User />
@@ -59,7 +66,7 @@ export default function Navbar() {
             <DropdownMenuItem>
               <Settings /> Settings
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem variant="destructive" onClick={onPressLogout}>
               <LogOut /> LogOut
             </DropdownMenuItem>
           </DropdownMenuContent>

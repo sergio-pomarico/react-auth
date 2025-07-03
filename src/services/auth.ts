@@ -28,6 +28,14 @@ class AuthService {
     this.http.setAuthorizationToken(accessToken);
     return result.data;
   };
+  logout = async (): Promise<{ status: string; message: string }> => {
+    const result = await this.http.post<
+      { status: string; message: string },
+      unknown
+    >("/auth/logout", {});
+    this.http.clearAuthorizationToken();
+    return result.data;
+  };
   setupMfa = async (): Promise<MfaSetupResponse> => {
     const result = await this.http.post<MfaSetupResponse, unknown>(
       "/mfa/setup",
@@ -53,8 +61,8 @@ class AuthService {
     >("/mfa/reset", {});
     return result.data;
   };
-  getUserInfo = async (): Promise<unknown> => {
-    const result = await this.http.get<{ status: string; message: string }>(
+  getUserInfo = async (): Promise<{ status: string; user: User }> => {
+    const result = await this.http.get<{ status: string; user: User }>(
       "/auth/me",
       {}
     );

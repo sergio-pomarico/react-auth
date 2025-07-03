@@ -97,6 +97,7 @@ export class HTTPClient {
    */
   public clearAuthorizationToken(): void {
     delete this.axiosInstance.defaults.headers.common["Authorization"];
+    delete this.axiosInstance.defaults.headers.common["x-refresh-token"];
   }
 
   /**
