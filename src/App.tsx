@@ -11,6 +11,7 @@ import { Toaster } from "@/shared/components/ui/sonner";
 import { ProtectedRoute } from "./shared/components/protected";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword/forgot-password";
 import DashboardPage from "./pages/Dashboard";
 import VerifyMFAPage from "./pages/Mfa/Verify";
 import SetupMfaPage from "./pages/Mfa/Setup";
@@ -39,6 +40,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route
             element={<ProtectedRoute />}
             children={[

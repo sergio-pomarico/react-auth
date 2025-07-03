@@ -75,6 +75,17 @@ class AuthService {
     >("/auth/refresh", {});
     return result.data;
   };
+  forgotPassword = async (
+    email: string
+  ): Promise<{ status: string; email: string }> => {
+    const result = await this.http.post<
+      { status: string; email: string },
+      {
+        email: string;
+      }
+    >("/user/forgot-password", { email });
+    return result.data;
+  };
 }
 
 const authServices = new AuthService(_config);
