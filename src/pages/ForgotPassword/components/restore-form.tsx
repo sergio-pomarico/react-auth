@@ -5,6 +5,7 @@ import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import type { ZodIssue } from "zod";
+import PasswordStrengthMeter from "@/shared/components/password-strength";
 import {
   restoreSchema,
   type RestorePayload,
@@ -88,7 +89,7 @@ export default function RestorePasswordForm({
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
-            {/* <PasswordStrengthMeter password={field.state.value} /> */}
+            <PasswordStrengthMeter password={field.state.value} />
             <FieldError error={field.state.meta.errors[0]?.message} />
           </div>
         )}

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import { useMutation } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -5,25 +8,32 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
-import { useParams } from "react-router";
 import RestorePasswordForm from "./components/restore-form";
-import type { RestorePayload } from "./schemas/restore-password";
-import { useMutation } from "@tanstack/react-query";
 import authServices from "@/services/auth";
-import ToastError from "@/shared/components/toast-error";
+import type { RestorePayload } from "./schemas/restore-password";
 import { LoadingOverlay } from "@/shared/components/loader";
+import ToastError from "@/shared/components/toast-error";
+import SuccessModal from "./components/success-modal";
 
 export default function ResetPasswordPage() {
   const params = useParams();
+  const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
+
   const { userId } = params;
   const { mutate, isPending: isLoading } = useMutation({
     mutationFn: async (values: RestorePayload) =>
       await authServices.restorePassword(values, userId!),
     onError: (error) => ToastError(error),
-    onSuccess: () => {},
+    onSuccess: () => setVisible(true),
   });
 
   const handleSubmit = (payload: RestorePayload) => mutate(payload);
+
+  const onDismissModal = () => {
+    setVisible(false);
+    navigate("/login");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -43,6 +53,11 @@ export default function ResetPasswordPage() {
         </Card>
       </div>
       <LoadingOverlay isVisible={isLoading} />
+      <SuccessModal
+        visible={visible}
+        onDismiss={onDismissModal}
+        isRestore={true}
+      />
     </div>
   );
 }

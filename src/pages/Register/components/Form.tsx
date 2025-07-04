@@ -4,7 +4,7 @@ import { Eye, EyeOff, UserPlus } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
-import PasswordStrengthMeter from "./PasswordStrength";
+import PasswordStrengthMeter from "../../../shared/components/password-strength";
 import { registerSchema, type RegisterPayload } from "../schemas/register";
 import { type ZodIssue } from "zod";
 
