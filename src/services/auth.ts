@@ -6,6 +6,7 @@ import type {
   LoginResponse,
   MfaSetupResponse,
 } from "@/types/auth";
+import type { RestorePayload } from "@/pages/ForgotPassword/schemas/restore-password";
 
 const API_URL = "http://localhost:3000";
 
@@ -84,6 +85,16 @@ class AuthService {
         email: string;
       }
     >("/user/forgot-password", { email });
+    return result.data;
+  };
+  restorePassword = async (
+    value: RestorePayload,
+    userId: string
+  ): Promise<{ status: string; message: string }> => {
+    const result = await this.http.post<
+      { status: string; message: string },
+      RestorePayload
+    >(`/user/reset-password/${userId}/${value.code}`, value);
     return result.data;
   };
 }

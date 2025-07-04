@@ -11,10 +11,11 @@ import { Toaster } from "@/shared/components/ui/sonner";
 import { ProtectedRoute } from "./shared/components/protected";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword/forgot-password";
 import DashboardPage from "./pages/Dashboard";
 import VerifyMFAPage from "./pages/Mfa/Verify";
 import SetupMfaPage from "./pages/Mfa/Setup";
+import ForgotPassword from "./pages/ForgotPassword/Forgot-Password";
+import RestorePassword from "./pages/ForgotPassword/Restore-Password";
 import { useAuthRefresh } from "./hooks/use-auth-refresh";
 
 function App() {
@@ -41,6 +42,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/restore-password/:userId"
+            element={<RestorePassword />}
+          />
           <Route
             element={<ProtectedRoute />}
             children={[
